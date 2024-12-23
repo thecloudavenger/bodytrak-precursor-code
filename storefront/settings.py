@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bodytrakdb',
+        'NAME': 'bodytrak_db',
         'HOST': 'localhost',
         'USER': 'root',
         'PASSWORD': 'MyPassword2024'
