@@ -3,8 +3,8 @@ from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, RetrieveM
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework import status
-from .models import Cart, CartItem, Product
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, ProductSerializer, UpdateCartItemSerializer
+from .models import Cart, CartItem, Customer, Product
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CustomerSerializer, ProductSerializer, UpdateCartItemSerializer
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
@@ -43,3 +43,25 @@ class CartItemViewSet(ModelViewSet):
 
     def get_queryset(self):
         return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']) .select_related('product')
+    
+class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, GenericViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+    # permission_classes = [IsAdminUser]
+
+    # @action(detail=True, permission_classes=[ViewCustomerHistoryPermission])
+    # def history(self, request, pk):
+    #     return Response('ok')
+
+    # @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
+    # def me(self, request):
+    #     (customer, created) = Customer.objects.get_or_create(
+    #         user_id=request.user.id)
+    #     if request.method == 'GET':
+    #         serializer = CustomerSerializer(customer)
+    #         return Response(serializer.data)
+    #     elif request.method == 'PUT':
+    #         serializer = CustomerSerializer(customer, data=request.data)
+    #         serializer.is_valid(raise_exception=True)
+    #         serializer.save()
+    #         return Response(serializer.data)
