@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework import status
 from store.permissions import IsAdminOrReadOnly
-from .models import Cart, CartItem, Customer, Product
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CustomerSerializer, ProductSerializer, UpdateCartItemSerializer
+from .models import Cart, CartItem, Customer, Order, Product
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, UpdateCartItemSerializer, UpdateOrderSerializer
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
@@ -54,8 +54,7 @@ class CustomerViewSet(ModelViewSet):
 
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):
-        (customer, created) = Customer.objects.get_or_create(
-            user_id=request.user.id)
+        customer = Customer.objects.get(user_id=request.user.id)
         if request.method == 'GET':
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
@@ -64,6 +63,35 @@ class CustomerViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self,request, *args, **kwargs): #Overriding the create
+        serializer = CreateOrderSerializer(data = request.data,
+                                           context={'user_id': self.request.user.id})
+        serializer.is_valid(raise_exception = True)
+        order  = serializer.save()
+        serializer = OrderSerializer(order)
+        return Response(serializer.data)
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CreateOrderSerializer
+        elif self.request.method == 'PATCH':
+            return UpdateOrderSerializer
+        return OrderSerializer
+
+    def get_serializer_context(self):
+        return {'user_id': self.request.user.id} #has to be passed then only its available
+
+    def get_queryset(self):
+        user = self.request.user
+
+        customer_id = Customer.objects.only('id').get(user_id=user.id) #TBD Check if exists 
+        return Order.objects.filter(customer_id = customer_id)
 
 
     
