@@ -22,6 +22,7 @@ admin.site.site_header = 'BodyTrak Admin'
 admin.site.index_title = 'Admin'
 
 urlpatterns = [
+    path('',include('core.urls')),
     path('admin/', admin.site.urls),
     path('dev_playground/', include('dev_playground.urls')),
     path('store/', include('store.urls')),
