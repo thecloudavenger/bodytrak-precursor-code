@@ -19,7 +19,7 @@ from django.urls import path, include
 import debug_toolbar
 
 admin.site.site_header = 'BodyTrak Admin'
-admin.site.index_title = 'Admin'
+admin.site.index_title = 'Admin Ttile'
 
 urlpatterns = [
     path('',include('core.urls')),
