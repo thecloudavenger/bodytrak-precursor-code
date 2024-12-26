@@ -4,6 +4,7 @@ from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, RetrieveM
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.exceptions import NotFound
 from rest_framework import status
 from store.permissions import IsAdminOrReadOnly
 from .models import Cart, CartItem, Customer, Order, Product
@@ -54,7 +55,12 @@ class CustomerViewSet(ModelViewSet):
 
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):
-        customer = Customer.objects.get(user_id=request.user.id)
+
+        try:
+            customer = Customer.objects.only('id').get(user_id=request.user.id).id
+        except Customer.DoesNotExist:
+            raise NotFound(detail="Customer not found for the current user.")
+                
         if request.method == 'GET':
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
@@ -90,7 +96,11 @@ class OrderViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
 
-        customer_id = Customer.objects.only('id').get(user_id=user.id) #TBD Check if exists 
+        try:
+            customer_id = Customer.objects.only('id').get(user_id=user.id).id
+        except Customer.DoesNotExist:
+            raise NotFound(detail="Customer not found for the current user.")
+    
         return Order.objects.filter(customer_id = customer_id)
 
 
