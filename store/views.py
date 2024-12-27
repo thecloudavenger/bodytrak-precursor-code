@@ -9,6 +9,8 @@ from rest_framework import status
 from store.permissions import IsAdminOrReadOnly
 from .models import Cart, CartItem, Customer, Order, Product
 from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, UpdateCartItemSerializer, UpdateOrderSerializer
+import logging
+logger = logging.getLogger(__name__)
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
