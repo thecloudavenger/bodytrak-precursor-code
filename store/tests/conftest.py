@@ -11,4 +11,4 @@ def api_client():
 def authenticate(api_client):
     def do_authenticate(is_staff=False):
         return api_client.force_authenticate(user=User(is_staff=is_staff))
-    return do_authenticate
+    return do_authenticate 

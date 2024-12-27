@@ -18,7 +18,7 @@ class Product(models.Model):
                                      decimal_places=2,
                                      validators=[MinValueValidator(1)])
     inventory = models.IntegerField()
-    last_update = models.DateTimeField(auto_now=True)
+    last_update = models.DateTimeField(auto_now=True) 
 
     def __str__(self):
         return self.title

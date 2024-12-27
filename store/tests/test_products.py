@@ -9,7 +9,7 @@ from model_bakery import baker
 def create_product(api_client):
     def do_create_product(product):
         return api_client.post('/store/products/', product)
-    return do_create_product
+    return do_create_product 
 
 
 @pytest.mark.django_db
