@@ -1,0 +1,49 @@
+version: '3.9'
+services:
+  web:
+    build: .
+    command: ./wait-for-it.sh mysql:3306 -- ./docker-entrypoint.sh
+    ports:
+      - 8000:8000
+    depends_on:
+      - redis
+      - mysql
+    restart: on-failure
+    volumes:
+      - .:/app
+  mysql:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      - MYSQL_DATABASE=bodytrak_db
+      - MYSQL_ROOT_PASSWORD=MyPassword2024
+    volumes:
+      - mysqldata:/var/lib/mysql     
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - 6379:6379
+    restart: always
+    volumes:
+      - redisdata:/data
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    ports:
+      - 5000:80
+      - 25:25
+    restart: always
+  tests:
+    build: .
+    command: ./wait-for-it.sh mysql:3306 -- ptw
+    depends_on:
+      - redis
+      - mysql
+    tty: true
+    volumes:
+      - .:/app
+volumes:
+  mysqldata:
+  pgdata:
+  redisdata:    

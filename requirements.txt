@@ -1,0 +1,17 @@
+django>=4.0
+django-debug-toolbar>=3.0
+mysqlclient>=2.0
+djangorestframework>=3.14
+drf-nested-routers>=0.94
+djoser>=2.0
+djangorestframework-simplejwt>=5.0
+django-cors-headers>=3.0   # CORS handling
+django-templated-mail>=1.1 # Email templates
+redis>=5.0                 # Redis support
+django-redis>=5.0          # Redis cache integration
+whitenoise>=6.0            # Static file serving
+pytest>=7.0         # Testing framework
+pytest-django>=4.5  # Django-specific testing
+pytest-watch>=4.2   # Watcher for pytest
+model-bakery>=1.5   # Model instance creation for tests
+locust>=2.15        # Load testing
