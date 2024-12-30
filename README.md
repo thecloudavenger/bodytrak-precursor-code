@@ -24,6 +24,7 @@
 
 # Additional Tools
 - Used DJANGO DEBUG TOOLBAR for easy inspection
+- Used DJOSER for Auth JWT
 - Silk for DB performance measurement(Removed from codebase)
 - Bakery for Mock Tests
 - Locust for Performance measurement
