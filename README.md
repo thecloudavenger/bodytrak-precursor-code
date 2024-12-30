@@ -37,6 +37,6 @@
 ## Possible Extensions if time permitted
 - More Unit Test(Complete workflow), Integration Tests, Running Static,Security Code Analysis & Implement
 - Implement Caching , Logging , Worker Threads (Celery) 
-- Functionality wise - Implemented Promotions/Offers,Added images for products, Send Email once order created via custom signals
+- Functionality wise - Implement Promotions/Offers,Added images for products, Send Email once order created via custom signals; Searching Pagination, sorting per product
 - CI/CD, Deployment 
 
