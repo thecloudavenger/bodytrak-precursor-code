@@ -33,18 +33,28 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields = ['id', 'product', 'quantity', 'total_price']
 
 
-class CartSerializer(serializers.ModelSerializer):
+class CreateCartSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
-    items = CartItemSerializer(many=True, read_only=True)
-    total_price = serializers.SerializerMethodField()
 
-    def get_total_price(self, cart):
-        return sum([item.quantity * item.product.unit_price for item in cart.items.all()])
-
+    def save(self, **kwargs): #Overriding the Save
+        with transaction.atomic():
+            customer_id = Customer.objects.only('id').get(user_id=self.context['user_id']) #TBD Check if exists 
+            cart = Cart.objects.create(customer=customer_id)
+            return cart
+        
     class Meta:
         model = Cart
-        fields = ['id', 'items', 'total_price']
+        fields = ['id']
 
+class CartSerializer(serializers.ModelSerializer):
+    total_order_price = serializers.SerializerMethodField()
+
+    def get_total_order_price(self, items):
+       return 100
+    
+    class Meta:
+        model = Cart
+        fields = ['id', 'total_order_price']  
 
 class AddCartItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField()
